@@ -1,4 +1,3 @@
-
 # Revisi ke-202507191807-1
 # - Fix indentation error
 # - UI pakai st.data_editor agar kolom bisa disusun urut drag & drop
