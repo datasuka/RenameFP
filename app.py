@@ -33,13 +33,14 @@ def extract_nitku_pembeli(text):
     return "-"
 
 def extract_data_from_text(text):
-    return {
+    raw_data = {
         "KodeFaktur": extract(r"Kode dan Nomor Seri Faktur Pajak:\s*(\d+)", text),
         "NamaPKP": extract(r"Pengusaha Kena Pajak:\s*Nama\s*:\s*(.*?)\s*Alamat", text),
         "AlamatPKP": extract(r"Pengusaha Kena Pajak:.*?Alamat\s*:\s*(.*?)\s*NPWP", text),
         "NPWPPKP": extract(r"Pengusaha Kena Pajak:.*?NPWP\s*:\s*([0-9\.]+)", text),
         "NamaPembeli": extract(r"Pembeli Barang Kena Pajak.*?Nama\s*:\s*(.*?)\s*Alamat", text),
-                "NPWPPembeli": extract(r"NPWP\s*:\s*([0-9\.]+)\s*NIK", text),
+        "AlamatPembeli": extract(r"Pembeli Barang Kena Pajak.*?Alamat\s*:\s*(.*?)\s*#", text),
+        "NPWPPembeli": extract(r"NPWP\s*:\s*([0-9\.]+)\s*NIK", text),
         "Referensi": extract(r"Referensi:\s*(.*?)\n", text),
         "TanggalFaktur": extract_tanggal(text),
         "NITKU": extract_nitku_pembeli(text),
