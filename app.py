@@ -13,9 +13,17 @@ import zipfile
 st.set_page_config(page_title="Rename Faktur Pajak", layout="centered")
 
 st.markdown("""
+    .stApp {
+
 <style>
     .stApp {
-        background-color: #f0f6ff;
+        background-color: #0d1117;
+        color: white;
+    }
+    h1, h2, h3, h4, h5, h6, p, .markdown-text-container, .stMarkdown {
+        color: white !important;
+    }
+</style>
     }
 </style>
 """, unsafe_allow_html=True)
