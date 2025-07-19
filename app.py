@@ -19,9 +19,9 @@ bulan_map = {
     "September": "09", "Oktober": "10", "November": "11", "Desember": "12"
 }
 
-def extract(pattern, text, flags=re.DOTALL, default="-", postproc=lambda x: x.strip()):
+def extract(pattern, text, flags=re.DOTALL, default="-", postproc=lambda x: x.strip():
     match = re.search(pattern, text, flags)
-    return postproc(match.group(1)) if match else default
+    return postproc(match.group(1) if match else default
 
 def extract_tanggal(text):
     match = re.search(r",\s*(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})", text)
@@ -64,10 +64,10 @@ def extract_data_from_text(text):
     return raw_data
 
 def sanitize_filename(text):
-    return re.sub(r'[\\/*?:"<>|]', "_", str(text))
+    return re.sub(r'[\\/*?:"<>|]', "_", str(text)
 
 def generate_filename(row, selected_cols):
-    parts = [sanitize_filename(str(row[col])) for col in selected_cols]
+    parts = [sanitize_filename(str(row[col]) for col in selected_cols]
     return "_".join(parts) + ".pdf"
 
 uploaded_files = st.file_uploader("Upload PDF Faktur Pajak", type=["pdf"], accept_multiple_files=True)
@@ -87,7 +87,7 @@ if uploaded_files:
     column_options = df.columns.tolist()
 
     st.markdown("### Pilih Kolom untuk Format Nama File")
-    selected_columns = st.multiselect("Urutan dan Pilih Kolom Format Nama File", column_options, default=[], key="selector", help="Klik lalu geser untuk atur urutan"))
+    selected_columns = st.multiselect("Urutan dan Pilih Kolom Format Nama File", column_options, default=[], key="selector", help="Klik lalu geser untuk atur urutan")
 
     if st.button("Rename PDF & Download"):
         zip_buffer = BytesIO()
