@@ -1,3 +1,8 @@
+# Revisi ke-202507191807
+# - Format tanggal faktur jadi angka: dd mm yyyy
+# - Tambah kolom Masa dan Tahun dari tanggal faktur
+# - Hapus kolom Alamat Pembeli
+# - Fix error raw_data not defined
 
 import streamlit as st
 import pandas as pd
@@ -62,9 +67,9 @@ if uploaded_files:
         with fitz.open(stream=file_bytes, filetype="pdf") as doc:
             text = "".join(page.get_text() for page in doc)
         data = extract_data_from_text(text)
-        raw_data["OriginalName"] = uploaded_file.name
-        raw_data["FileBytes"] = file_bytes
-        data_rows.append(raw_data)
+        data["OriginalName"] = uploaded_file.name
+        data["FileBytes"] = file_bytes
+        data_rows.append(data)
 
     df = pd.DataFrame(data_rows).drop(columns=["FileBytes", "OriginalName"])
     column_options = df.columns.tolist()
