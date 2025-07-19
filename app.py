@@ -1,11 +1,12 @@
 
 import streamlit as st
 import pandas as pd
-import fitz  # PyMuPDF
+import fitz
 import re
-import os
+from io import BytesIO
+import zipfile
 
-st.title("Rename Faktur Pajak PDF Berdasarkan Metadata")
+st.title("Rename PDF Faktur Pajak Berdasarkan Metadata")
 
 bulan_map = {
     "Januari": "01", "Februari": "02", "Maret": "03", "April": "04",
@@ -38,8 +39,7 @@ def extract_data_from_text(text):
         "AlamatPKP": extract(r"Pengusaha Kena Pajak:.*?Alamat\s*:\s*(.*?)\s*NPWP", text),
         "NPWPPKP": extract(r"Pengusaha Kena Pajak:.*?NPWP\s*:\s*([0-9\.]+)", text),
         "NamaPembeli": extract(r"Pembeli Barang Kena Pajak.*?Nama\s*:\s*(.*?)\s*Alamat", text),
-        "AlamatPembeli": extract(r"Pembeli Barang Kena Pajak.*?Alamat\s*:\s*(.*?)\s*#", text),
-        "NPWPPembeli": extract(r"NPWP\s*:\s*([0-9\.]+)\s*NIK", text),
+                "NPWPPembeli": extract(r"NPWP\s*:\s*([0-9\.]+)\s*NIK", text),
         "Referensi": extract(r"Referensi:\s*(.*?)\n", text),
         "TanggalFaktur": extract_tanggal(text),
         "NITKU": extract_nitku_pembeli(text),
@@ -55,30 +55,28 @@ def generate_filename(row, selected_cols):
 uploaded_files = st.file_uploader("Upload PDF Faktur Pajak", type=["pdf"], accept_multiple_files=True)
 
 if uploaded_files:
-    st.markdown("### 1. Pilih Kolom untuk Format Nama File")
     data_rows = []
     for uploaded_file in uploaded_files:
         file_bytes = uploaded_file.read()
         with fitz.open(stream=file_bytes, filetype="pdf") as doc:
             text = "".join(page.get_text() for page in doc)
         data = extract_data_from_text(text)
-        data["FileBytes"] = file_bytes
         data["OriginalName"] = uploaded_file.name
+        data["FileBytes"] = file_bytes
         data_rows.append(data)
 
     df = pd.DataFrame(data_rows).drop(columns=["FileBytes", "OriginalName"])
     column_options = df.columns.tolist()
-    selected_columns = st.multiselect("Urutkan dan pilih kolom", column_options, default=column_options)
 
-    if st.button("Rename dan Download Zip"):
-        from io import BytesIO
-        import zipfile
+    st.markdown("### Pilih Kolom untuk Format Nama File")
+    selected_columns = st.multiselect("Urutan Nama File", column_options, default=["TanggalFaktur", "NamaPembeli", "NPWPPembeli", "KodeFaktur", "Referensi"])
 
-        buffer = BytesIO()
-        with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zipf:
+    if st.button("Rename PDF & Download"):
+        zip_buffer = BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zipf:
             for i, row in df.iterrows():
                 filename = generate_filename(row, selected_columns)
                 zipf.writestr(filename, data_rows[i]["FileBytes"])
 
-        buffer.seek(0)
-        st.download_button("Download PDF Rename ZIP", buffer, file_name="faktur_rename.zip", mime="application/zip")
+        zip_buffer.seek(0)
+        st.download_button("Download ZIP PDF Hasil Rename", zip_buffer, file_name="faktur_renamed.zip", mime="application/zip")
