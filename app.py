@@ -87,7 +87,7 @@ if uploaded_files:
     column_options = df.columns.tolist()
 
     st.markdown("### Pilih Kolom untuk Format Nama File")
-    selected_columns = st.multiselect("Urutan Nama File", column_options, default=["TanggalFaktur", "NamaPembeli", "NPWPPembeli", "NomorSeriFaktur", "Referensi"])
+    selected_columns = st.multiselect("Urutan dan Pilih Kolom Format Nama File", column_options, default=[], key="selector", help="Klik lalu geser untuk atur urutan"))
 
     if st.button("Rename PDF & Download"):
         zip_buffer = BytesIO()
