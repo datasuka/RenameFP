@@ -62,9 +62,9 @@ if uploaded_files:
         with fitz.open(stream=file_bytes, filetype="pdf") as doc:
             text = "".join(page.get_text() for page in doc)
         data = extract_data_from_text(text)
-        data["OriginalName"] = uploaded_file.name
-        data["FileBytes"] = file_bytes
-        data_rows.append(data)
+        raw_data["OriginalName"] = uploaded_file.name
+        raw_data["FileBytes"] = file_bytes
+        data_rows.append(raw_data)
 
     df = pd.DataFrame(data_rows).drop(columns=["FileBytes", "OriginalName"])
     column_options = df.columns.tolist()
