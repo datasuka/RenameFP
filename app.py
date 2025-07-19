@@ -44,12 +44,24 @@ def extract_data_from_text(text):
         "AlamatPKP": extract(r"Pengusaha Kena Pajak:.*?Alamat\s*:\s*(.*?)\s*NPWP", text),
         "NPWPPKP": extract(r"Pengusaha Kena Pajak:.*?NPWP\s*:\s*([0-9\.]+)", text),
         "NamaPembeli": extract(r"Pembeli Barang Kena Pajak.*?Nama\s*:\s*(.*?)\s*Alamat", text),
-        "AlamatPembeli": extract(r"Pembeli Barang Kena Pajak.*?Alamat\s*:\s*(.*?)\s*#", text),
         "NPWPPembeli": extract(r"NPWP\s*:\s*([0-9\.]+)\s*NIK", text),
         "Referensi": extract(r"Referensi:\s*(.*?)\n", text),
         "TanggalFaktur": extract_tanggal(text),
         "NITKU": extract_nitku_pembeli(text),
     }
+
+    # Tambah format tanggal angka & pisah masa/tahun
+    try:
+        d, m_str, y = raw_data["TanggalFaktur"].split("/")
+        month_num = bulan_map.get(m_str, "00")
+        raw_data["TanggalFaktur"] = f"{d} {month_num} {y}"
+        raw_data["Masa"] = month_num
+        raw_data["Tahun"] = y
+    except:
+        raw_data["Masa"] = "-"
+        raw_data["Tahun"] = "-"
+
+    return raw_data
 
 def sanitize_filename(text):
     return re.sub(r'[\\/*?:"<>|]', "_", str(text))
@@ -66,10 +78,10 @@ if uploaded_files:
         file_bytes = uploaded_file.read()
         with fitz.open(stream=file_bytes, filetype="pdf") as doc:
             text = "".join(page.get_text() for page in doc)
-        data = extract_data_from_text(text)
-        data["OriginalName"] = uploaded_file.name
-        data["FileBytes"] = file_bytes
-        data_rows.append(data)
+        raw_data = extract_data_from_text(text)
+        raw_data["OriginalName"] = uploaded_file.name
+        raw_data["FileBytes"] = file_bytes
+        data_rows.append(raw_data)
 
     df = pd.DataFrame(data_rows).drop(columns=["FileBytes", "OriginalName"])
     column_options = df.columns.tolist()
