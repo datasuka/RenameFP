@@ -39,7 +39,7 @@ def extract_nitku_pembeli(text):
 
 def extract_data_from_text(text):
     raw_data = {
-        "KodeFaktur": extract(r"Kode dan Nomor Seri Faktur Pajak:\s*(\d+)", text),
+        "NomorSeriFaktur": extract(r"Kode dan Nomor Seri Faktur Pajak:\s*(\d+)", text),
         "NamaPKP": extract(r"Pengusaha Kena Pajak:\s*Nama\s*:\s*(.*?)\s*Alamat", text),
         "AlamatPKP": extract(r"Pengusaha Kena Pajak:.*?Alamat\s*:\s*(.*?)\s*NPWP", text),
         "NPWPPKP": extract(r"Pengusaha Kena Pajak:.*?NPWP\s*:\s*([0-9\.]+)", text),
@@ -87,7 +87,7 @@ if uploaded_files:
     column_options = df.columns.tolist()
 
     st.markdown("### Pilih Kolom untuk Format Nama File")
-    selected_columns = st.multiselect("Urutan Nama File", column_options, default=["TanggalFaktur", "NamaPembeli", "NPWPPembeli", "KodeFaktur", "Referensi"])
+    selected_columns = st.multiselect("Urutan Nama File", column_options, default=["TanggalFaktur", "NamaPembeli", "NPWPPembeli", "NomorSeriFaktur", "Referensi"])
 
     if st.button("Rename PDF & Download"):
         zip_buffer = BytesIO()
