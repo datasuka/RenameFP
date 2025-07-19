@@ -1,5 +1,5 @@
-# Revisi ke-202507191807-1
-# - Fix indentation error
+# Revisi ke-202507191807-2
+# - Dark mode (background gelap, teks putih)
 # - UI pakai st.data_editor agar kolom bisa disusun urut drag & drop
 # - Tambahan tampilan & petunjuk
 
@@ -13,17 +13,29 @@ import zipfile
 st.set_page_config(page_title="Rename Faktur Pajak", layout="centered")
 
 st.markdown("""
-    .stApp {
-
 <style>
     .stApp {
         background-color: #0d1117;
         color: white;
     }
-    h1, h2, h3, h4, h5, h6, p, .markdown-text-container, .stMarkdown {
+    h1, h2, h3, h4, h5, h6, p, label, .markdown-text-container, .stText, .stMarkdown {
         color: white !important;
     }
-</style>
+    .stButton>button {
+        color: white !important;
+        background-color: #1f6feb;
+        border-radius: 8px;
+        padding: 0.5em 1em;
+    }
+    .stDownloadButton>button {
+        background-color: #2ea44f;
+        color: white !important;
+        border-radius: 8px;
+        padding: 0.5em 1em;
+    }
+    .stFileUploader {
+        background-color: #161b22;
+        color: white;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -32,7 +44,8 @@ st.markdown("## 🧾 Rename PDF Faktur Pajak Berdasarkan Format yang ditentukan.
 st.markdown("*By: Reza Fahlevi Lubis BKP @zavibis*")
 
 st.markdown("### 📌 Petunjuk Penggunaan")
-st.markdown("""1. **Upload** satu atau beberapa file PDF Faktur Pajak.
+st.markdown("""
+1. **Upload** satu atau beberapa file PDF Faktur Pajak.
 2. Aplikasi akan otomatis membaca isi metadata dari setiap faktur.
 3. Pilih dan urutkan **kolom-kolom metadata** untuk dijadikan format nama file PDF.
 4. Klik **Rename PDF & Download** untuk mengunduh file hasil rename dalam 1 file ZIP.
