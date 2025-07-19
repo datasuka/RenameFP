@@ -1,9 +1,8 @@
-# Revisi ke-202507191807
-# - Format tanggal faktur jadi angka: dd mm yyyy
-# - Tambah kolom Masa dan Tahun dari tanggal faktur
-# - Hapus kolom Alamat Pembeli
-# - Fix error raw_data not defined
-# - Fix syntax error: unmatched parentheses
+
+# Revisi ke-202507191807-1
+# - Fix indentation error
+# - UI pakai st.data_editor agar kolom bisa disusun urut drag & drop
+# - Tambahan tampilan & petunjuk
 
 import streamlit as st
 import pandas as pd
@@ -12,17 +11,25 @@ import re
 from io import BytesIO
 import zipfile
 
-st.title("Rename PDF Faktur Pajak Berdasarkan Format yang ditentukan.")
+st.set_page_config(page_title="Rename Faktur Pajak", layout="centered")
 
+st.markdown("""
+<style>
+    .stApp {
+        background-color: #f0f6ff;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("## 🧾 Rename PDF Faktur Pajak Berdasarkan Format yang ditentukan.")
 st.markdown("*By: Reza Fahlevi Lubis BKP @zavibis*")
 
 st.markdown("### 📌 Petunjuk Penggunaan")
 st.markdown("""
 1. **Upload** satu atau beberapa file PDF Faktur Pajak.
-2. Setelah selesai upload, aplikasi akan otomatis membaca isi setiap faktur.
-3. Pilih **kolom-kolom metadata** yang ingin digunakan untuk format nama file.
-4. Gunakan **drag & drop** untuk mengatur urutan kolom.
-5. Klik **Rename PDF & Download** untuk mengunduh file PDF yang sudah dinamai ulang dalam 1 file ZIP.
+2. Aplikasi akan otomatis membaca isi metadata dari setiap faktur.
+3. Pilih dan urutkan **kolom-kolom metadata** untuk dijadikan format nama file PDF.
+4. Klik **Rename PDF & Download** untuk mengunduh file hasil rename dalam 1 file ZIP.
 """)
 
 bulan_map = {
@@ -81,7 +88,7 @@ def generate_filename(row, selected_cols):
     parts = [sanitize_filename(str(row[col])) for col in selected_cols]
     return "_".join(parts) + ".pdf"
 
-uploaded_files = st.file_uploader("Upload PDF Faktur Pajak", type=["pdf"], accept_multiple_files=True)
+uploaded_files = st.file_uploader("📎 Upload PDF Faktur Pajak", type=["pdf"], accept_multiple_files=True)
 
 if uploaded_files:
     data_rows = []
@@ -97,26 +104,28 @@ if uploaded_files:
     df = pd.DataFrame(data_rows).drop(columns=["FileBytes", "OriginalName"])
     column_options = df.columns.tolist()
 
-    st.markdown("### Pilih Kolom untuk Format Nama File")
-    
-st.markdown("### Pilih Kolom untuk Format Nama File (Urutkan sesuai keinginan)")
-initial_df = pd.DataFrame({"Kolom": column_options})
-selected_rows = st.data_editor(
-    initial_df,
-    use_container_width=True,
-    num_rows="dynamic",
-    column_order=["Kolom"],
-    column_config={"Kolom": st.column_config.SelectboxColumn("Pilih Kolom", options=column_options)},
-    hide_index=True
-)
-selected_columns = selected_rows["Kolom"].dropna().tolist()
+    st.markdown("### ✏️ Pilih Kolom dan Urutkan Format Nama File")
+    initial_df = pd.DataFrame({"Kolom": column_options})
+    selected_rows = st.data_editor(
+        initial_df,
+        use_container_width=True,
+        num_rows="dynamic",
+        column_order=["Kolom"],
+        column_config={
+            "Kolom": st.column_config.SelectboxColumn(
+                "Pilih Kolom", options=column_options
+            )
+        },
+        hide_index=True
+    )
+    selected_columns = selected_rows["Kolom"].dropna().tolist()
 
-    if st.button("Rename PDF & Download"):
+    if st.button("🔁 Rename PDF & Download"):
         zip_buffer = BytesIO()
         with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zipf:
             for i, row in df.iterrows():
                 filename = generate_filename(row, selected_columns)
                 zipf.writestr(filename, data_rows[i]["FileBytes"])
-
         zip_buffer.seek(0)
-        st.download_button("Download ZIP PDF Hasil Rename", zip_buffer, file_name="faktur_renamed.zip", mime="application/zip")
+        st.success("✅ Berhasil! Klik tombol di bawah ini untuk mengunduh file ZIP.")
+        st.download_button("📦 Download ZIP PDF Hasil Rename", zip_buffer, file_name="faktur_renamed.zip", mime="application/zip")
