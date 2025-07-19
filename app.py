@@ -12,38 +12,7 @@ import re
 from io import BytesIO
 import zipfile
 
-
-st.markdown("""
-    <style>
-    body {
-        background-color: #f0f7ff;
-    }
-    .stApp {
-        background-color: #f0f7ff;
-    }
-    .stButton>button {
-        background-color: #004785;
-        color: white;
-        font-weight: bold;
-    }
-    .stDownloadButton>button {
-        background-color: #1e88e5;
-        color: white;
-        font-weight: bold;
-    }
-    .stMultiSelect label {
-        font-weight: bold;
-        color: #004785;
-    }
-    .stTitle {
-        color: #004785;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-st.title("🔷 Rename PDF Faktur Pajak Berdasarkan Format yang ditentukan.")
-st.markdown("*By: Reza Fahlevi Lubis BKP @zavibis*")
-
+st.title("Rename PDF Faktur Pajak Berdasarkan Format yang ditentukan.")
 
 st.markdown("*By: Reza Fahlevi Lubis BKP @zavibis*")
 
