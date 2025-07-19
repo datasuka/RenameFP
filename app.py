@@ -98,7 +98,18 @@ if uploaded_files:
     column_options = df.columns.tolist()
 
     st.markdown("### Pilih Kolom untuk Format Nama File")
-    selected_columns = st.multiselect("Urutan dan Pilih Kolom Format Nama File", column_options, default=[], key="selector", help="Klik lalu geser untuk atur urutan")
+    
+st.markdown("### Pilih Kolom untuk Format Nama File (Urutkan sesuai keinginan)")
+initial_df = pd.DataFrame({"Kolom": column_options})
+selected_rows = st.data_editor(
+    initial_df,
+    use_container_width=True,
+    num_rows="dynamic",
+    column_order=["Kolom"],
+    column_config={"Kolom": st.column_config.SelectboxColumn("Pilih Kolom", options=column_options)},
+    hide_index=True
+)
+selected_columns = selected_rows["Kolom"].dropna().tolist()
 
     if st.button("Rename PDF & Download"):
         zip_buffer = BytesIO()
