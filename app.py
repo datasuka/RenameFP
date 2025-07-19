@@ -12,7 +12,49 @@ import re
 from io import BytesIO
 import zipfile
 
-st.title("Rename PDF Faktur Pajak Berdasarkan Metadata")
+
+st.markdown("""
+    <style>
+    body {
+        background-color: #f0f7ff;
+    }
+    .stApp {
+        background-color: #f0f7ff;
+    }
+    .stButton>button {
+        background-color: #004785;
+        color: white;
+        font-weight: bold;
+    }
+    .stDownloadButton>button {
+        background-color: #1e88e5;
+        color: white;
+        font-weight: bold;
+    }
+    .stMultiSelect label {
+        font-weight: bold;
+        color: #004785;
+    }
+    .stTitle {
+        color: #004785;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+st.title("🔷 Rename PDF Faktur Pajak Berdasarkan Format yang ditentukan.")
+st.markdown("*By: Reza Fahlevi Lubis BKP @zavibis*")
+
+
+st.markdown("*By: Reza Fahlevi Lubis BKP @zavibis*")
+
+st.markdown("### 📌 Petunjuk Penggunaan")
+st.markdown("""
+1. **Upload** satu atau beberapa file PDF Faktur Pajak.
+2. Setelah selesai upload, aplikasi akan otomatis membaca isi setiap faktur.
+3. Pilih **kolom-kolom metadata** yang ingin digunakan untuk format nama file.
+4. Gunakan **drag & drop** untuk mengatur urutan kolom.
+5. Klik **Rename PDF & Download** untuk mengunduh file PDF yang sudah dinamai ulang dalam 1 file ZIP.
+""")
 
 bulan_map = {
     "Januari": "01", "Februari": "02", "Maret": "03", "April": "04",
