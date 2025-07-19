@@ -24,8 +24,7 @@ st.markdown("## 🧾 Rename PDF Faktur Pajak Berdasarkan Format yang ditentukan.
 st.markdown("*By: Reza Fahlevi Lubis BKP @zavibis*")
 
 st.markdown("### 📌 Petunjuk Penggunaan")
-st.markdown("""
-1. **Upload** satu atau beberapa file PDF Faktur Pajak.
+st.markdown("""1. **Upload** satu atau beberapa file PDF Faktur Pajak.
 2. Aplikasi akan otomatis membaca isi metadata dari setiap faktur.
 3. Pilih dan urutkan **kolom-kolom metadata** untuk dijadikan format nama file PDF.
 4. Klik **Rename PDF & Download** untuk mengunduh file hasil rename dalam 1 file ZIP.
