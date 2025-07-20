@@ -78,7 +78,7 @@ def extract_data_from_text(text):
         "NPWPPKP": extract(r"Pengusaha Kena Pajak:.*?NPWP\s*:\s*([0-9\.]+)", text),
         "NamaPembeli": extract(r"Pembeli Barang Kena Pajak.*?Nama\s*:\s*(.*?)\s*Alamat", text),
         "NPWPPembeli": extract(r"NPWP\s*:\s*([0-9\.]+)\s*NIK", text),
-        "Referensi": extract(r"Referensi:\s*(.*?)\n", text),
+        "Referensi": extract(r"Referensi:\s*(.*?)\n", text, postproc=lambda x: x.strip().rstrip(")")),
         "TanggalFaktur": extract_tanggal(text),
         "NITKU": extract_nitku_pembeli(text),
     }
@@ -100,7 +100,7 @@ def sanitize_filename(text):
 
 def generate_filename(row, selected_cols):
     parts = [sanitize_filename(str(row[col])) for col in selected_cols]
-    return "_".join(parts) + ".pdf"
+    return "Faktur Pajak " + "_".join(parts) + ".pdf"
 
 uploaded_files = st.file_uploader("📎 Upload PDF Faktur Pajak", type=["pdf"], accept_multiple_files=True)
 
