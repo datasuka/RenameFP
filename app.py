@@ -101,7 +101,7 @@ def extract_data_from_text(text):
     return raw_data
 
 def sanitize_filename(text):
-    return re.sub(r'[\/*?:"<>|]', "_", str(text))
+    return re.sub(r'[\\/*?:"<>|]', "_", str(text))
 
 def generate_filename(row, selected_cols):
     parts = [sanitize_filename(str(row[col])) for col in selected_cols]
