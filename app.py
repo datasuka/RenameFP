@@ -1,7 +1,4 @@
-# Revisi ke-202507191807-2
-# - Dark mode (background gelap, teks putih)
-# - UI pakai st.data_editor agar kolom bisa disusun urut drag & drop
-# - Tambahan tampilan & petunjuk
+# Rename PDF Faktur Pajak Berdasarkan Metadata (Dark Mode & Custom UI)
 
 import streamlit as st
 import pandas as pd
@@ -12,26 +9,24 @@ import zipfile
 
 st.set_page_config(page_title="Rename Faktur Pajak", layout="centered")
 
+# CSS untuk dark theme DJP style
 st.markdown("""
 <style>
-    .stApp {
-        background-color: #0d1117;
-        color: white;
-    }
+    .stApp { background-color: #0d1117; color: white; }
     h1, h2, h3, h4, h5, h6, p, label, .markdown-text-container, .stText, .stMarkdown {
         color: white !important;
     }
     .stButton>button {
-        color: white !important;
         background-color: #1f6feb;
-        border-radius: 8px;
-        padding: 0.5em 1em;
+        color: white !important;
+        border-radius: 6px;
+        padding: 0.4em 0.9em;
     }
     .stDownloadButton>button {
         background-color: #2ea44f;
         color: white !important;
-        border-radius: 8px;
-        padding: 0.5em 1em;
+        border-radius: 6px;
+        padding: 0.4em 0.9em;
     }
     .stFileUploader {
         background-color: #161b22;
@@ -123,21 +118,8 @@ if uploaded_files:
     df = pd.DataFrame(data_rows).drop(columns=["FileBytes", "OriginalName"])
     column_options = df.columns.tolist()
 
-    st.markdown("### ✏️ Pilih Kolom dan Urutkan Format Nama File")
-    initial_df = pd.DataFrame({"Kolom": column_options})
-    selected_rows = st.data_editor(
-        initial_df,
-        use_container_width=True,
-        num_rows="dynamic",
-        column_order=["Kolom"],
-        column_config={
-            "Kolom": st.column_config.SelectboxColumn(
-                "Pilih Kolom", options=column_options
-            )
-        },
-        hide_index=True
-    )
-    selected_columns = selected_rows["Kolom"].dropna().tolist()
+    st.markdown("### ✏️ Pilih Kolom untuk Format Nama File")
+    selected_columns = st.multiselect("Urutan Nama File", column_options, default=[], key="selector", help="Klik lalu geser untuk atur urutan")
 
     if st.button("🔁 Rename PDF & Download"):
         zip_buffer = BytesIO()
